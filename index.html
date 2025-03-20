@@ -2,68 +2,86 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <!-- Production version -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <title>Tienda en Linea</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <title>Paleteria</title>
 </head>
 
-<body class="min-h-screen bg-emerald-50">
-    <header class="shadow-lg bg-emerald-600  mx-auto px-4 py-6">
-        <div class="flex items-center gap-3">
-            <i class="bi bi-shop text-xl text-white text-end flex items-center "></i>
-            <h1 class="text-2xl font-bold text-white">Tienda X</h1>
-        </div>
-    </header>
+<body class="bg-pink-100 min-h-screen">
+  <header class="bg-pink-400 shadow-lg p-6 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <i class="bi bi-cup-straw text-white text-3xl"></i>
+      <h1 class="text-3xl font-bold text-white">Paleteria Ice Cream!!!!</h1>
+    </div>
+  </header>
 
-    <main class="container mx-auto px-4 py-8">
-        <div class="mb-12">
-            <h2 class="text-xl font-semibold text-gray-800 mb-6">Productos</h2>
-            <form id ="Formulario"
-                class="bg-white rounded shadow-md p-6 border border-emerald-100 grid gap-6 grid-cols-2 md:grid-cols-1">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
-                    <input required 
-                    id = "NombreProducto"
-                type="text" placeholder="Mantecadas"
-                        class="w-full rounded-md border-2 border-emerald-200 focus:border-emerald-500 focus:ring focus:ring-emerald-200 px-3 py-2" />
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Precio</label>
-                    <input id = "precioProducto" required
-                    type="number" placeholder="$30.50"
-                        class="w-full rounded-md border-2 border-emerald-200 focus:border-emerald-500 focus:ring focus:ring-emerald-200 px-3 py-2" />
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Stock</label>
-                    <input id = "stockProducto" required
-                    type="number" placeholder="300"
-                        class="w-full rounded-md border-2 border-emerald-200 focus:border-emerald-500 focus:ring focus:ring-emerald-200 px-3 py-2" />
-                </div>
-                <div class="flex gap-4  pt-5 justify-end items-center flex-col-reverse md:flex-row">
-                    <button type="button" id = "btn-limpiar"
-                        class="px-6 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 flex items-center justify-center gap-2 transition-colors duration-200 w-0 h-0 invisible md:visible md:w-1/2 md:h-full">
-                        Limpiar
-                    </button>
-                    <button type="submit"
-                        class="px-6 py-2  bg-emerald-600 text-white rounded-md hover:bg-emerald-700 flex items-center gap-2 transition-colors duration-200 w-full md:w-1/2 justify-center">
-                        Agregar
-                    </button>
-                </div>
-            </form>
+  <main class="container mx-auto p-6">
+    <section class="text-center mb-12">
+      <h2 class="text-4xl font-bold text-pink-700 mb-4">Paleteria Ice Cream</h2>
+      <p class="text-lg text-pink-600">¡Refrescantes, deliciosos y naturales!</p>
+      <img src="https://st3.depositphotos.com/1177973/12519/i/450/depositphotos_125193712-stock-photo-tasty-fruit-ice-cream.jpg" alt="Smoothie"
+        class="mx-auto mt-6 rounded-3xl shadow-lg max-w-sm">
+    </section>
+
+    <section>
+      <h3 class="text-2xl font-semibold text-pink-700 mb-6">Nuestros Sabores</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-xl shadow-md p-6 hover:scale-105 transition">
+          <img src="https://media.istockphoto.com/id/1254201113/es/foto/paletas-caseras-de-ar%C3%A1ndanos-sobre-fondo-gris.jpg?s=612x612&w=0&k=20&c=IY_CJl5oZCclEY2tLyb4D48T6QnwfaJ23eJhEMkNGZk=" class="w-full rounded-lg mb-4" alt="Frutas Moradas">
+          <h4 class="text-xl font-bold text-pink-700">Frutas Moradas</h4>
         </div>
-        <section class="mt-12">
-            <h2 class="text-xl font-semibold text-gray-800 mb-6 ">Lista de productos</h2>
-            <ul class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" id="contenedor-cards" >
-                
-            </ul>
-        </section>
-    </main>
-    <script src="./index.js"></script>
+        <div class="bg-white rounded-xl shadow-md p-6 hover:scale-105 transition">
+          <img src="https://i0.wp.com/thehappening.com/wp-content/uploads/2015/12/paletas-de-panditas.jpg?fit=1024%2C694&ssl=1" class="w-full rounded-lg mb-4" alt="Kiwi Power">
+          <h4 class="text-xl font-bold text-green-700">Limon con Gomitas</h4>
+        </div>
+        <div class="bg-white rounded-xl shadow-md p-6 hover:scale-105 transition">
+          <img src="https://i.pinimg.com/736x/2f/23/d3/2f23d3acac3f2c79bde7ac924e0b556a.jpg" class="w-full rounded-lg mb-4" alt="Fresa Love">
+          <h4 class="text-xl font-bold text-red-500">Chocolate con Nuez</h4>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-12 bg-white p-8 rounded-xl shadow-md">
+      <h3 class="text-2xl font-semibold text-pink-700 mb-6">Agrega tus paletas:</h3>
+      <form id="Formulario" class="grid gap-6 grid-cols-1 md:grid-cols-3">
+        <div>
+          <label class="block text-pink-700 font-semibold mb-2" for="NombreProducto">Nombre:</label>
+          <input type="text" id="NombreProducto" placeholder="Moras.." 
+            class="w-full rounded-lg border-2 border-pink-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400" required>
+        </div>
+        <div>
+          <label class="block text-pink-700 font-semibold mb-2" for="precioProducto">Precio:</label>
+          <input type="number" id="precioProducto" placeholder="$40" 
+            class="w-full rounded-lg border-2 border-pink-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400" required>
+        </div>
+        <div>
+          <label class="block text-pink-700 font-semibold mb-2" for="stockProducto">Stock:</label>
+          <input type="number" id="stockProducto" placeholder="100" 
+            class="w-full rounded-lg border-2 border-pink-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400" required>
+        </div>
+        <div class="md:col-span-3 flex justify-end gap-4">
+          <button type="reset" id="btn-limpiar" 
+            class="px-6 py-3 bg-gray-200 text-pink-700 rounded-lg hover:bg-gray-300 font-semibold">Limpiar</button>
+          <button type="submit" 
+            class="px-6 py-3 bg-pink-500 text-white rounded-lg hover:bg-pink-600 font-semibold">Agregar</button>
+        </div>
+        
+      </form>
+    </section>
+    <section class="mt-12">
+      <h2 class="text-xl font-semibold text-gray-800 mb-6 ">Lista de productos</h2>
+      <ul class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" id="contenedor-cards" >
+          
+      </ul>
+  </section>
+  </main>
+
+  <footer class="bg-pink-400 text-white text-center py-6 mt-12">
+  </footer>
+
+  <script src="index.js"></script>
 </body>
 
 </html>

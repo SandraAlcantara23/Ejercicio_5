@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rompope Artesanal Carrito de Compras</title>
+    <link rel="stylesheet" href="/assets/css/cart.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <h1>Tu Carrito</h1>
+    <div class="cart-container">
+        <div id="cart-container"></div>
+        <button onclick="checkout()">Finalizar Compra</button>
+        <button onclick="window.location.href='carrito.html'">Volver a la tienda</button>
+    </div>
+
+    <script>
+        function displayCart() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartContainer = document.getElementById('cart-container');
+            cartContainer.innerHTML = '';
+
+            cart.forEach((item, index) => {
+                if (!item.productId) {
+                    console.warn(`Producto sin ID detectado:`, item);
+                }
+                cartContainer.innerHTML += `
+                    <div class="cart-item">
+                        <img src="assets/images/${item.image_url}" alt="${item.productName}" width="100">
+                        <p><strong>${item.productName}</strong></p>
+                        <p>Precio: $${item.price}</p>
+                        <p>Cantidad: ${item.quantity}</p>
+                        <button onclick="removeFromCart(${index})">Eliminar</button>
+                        <button onclick="modifyCart(${index}, ${item.quantity})">Modificar</button>
+                    </div>
+                `;
+            });
+        }
+
+        function removeFromCart(index) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCart();
+        }
+
+        function modifyCart(index, currentQuantity) {
+            Swal.fire({
+                title: 'Modificar cantidad',
+                input: 'number',
+                inputLabel: 'Nueva cantidad:',
+                inputValue: currentQuantity,
+                inputAttributes: {
+                    min: 1,
+                    step: 1
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Modificar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const newQuantity = parseInt(result.value);
+                    if (newQuantity > 0) {
+                        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                        cart[index].quantity = newQuantity;
+                        localStorage.setItem('cart', JSON.stringify(cart));
+                        displayCart();
+                        Swal.fire('Cantidad modificada', '', 'success');
+                    } else {
+                        Swal.fire('Cantidad no válida', 'La cantidad debe ser mayor a 0.', 'error');
+                    }
+                }
+            });
+        }
+
+        async function checkout() {
+            const token = localStorage.getItem('token');
+            const client_id = localStorage.getItem('clientId'); 
+
+            if (!token || !client_id) {
+                Swal.fire('Error', 'Debes iniciar sesión para finalizar la compra.', 'error');
+                return;
+            }
+
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cart.length === 0) {
+                Swal.fire('Error', 'El carrito está vacío.', 'error');
+                return;
+            }
+
+            const formattedCart = cart.map(item => ({
+                productId: item.productId ? parseInt(item.productId) : null,
+                quantity: parseInt(item.quantity)
+            }));
+
+            if (formattedCart.some(item => item.productId === null)) {
+                Swal.fire('Error', 'Un producto no tiene un ID válido.', 'error');
+                console.error('Error: Carrito con productos sin ID:', formattedCart);
+                return;
+            }
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            try {
+                const confirmResult = await Swal.fire({
+                    title: '¿Deseas finalizar la compra?',
+                    text: `Total a pagar: $${total}`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, comprar',
+                    cancelButtonText: 'Cancelar'
+                });
+
+                if (!confirmResult.isConfirmed) return;
+
+                const purchaseResponse = await fetch('http://localhost:3000/checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        client_id: parseInt(client_id),
+                        total: total,
+                        cart: formattedCart
+                    })
+                });
+
+                const purchaseData = await purchaseResponse.json();
+
+                if (purchaseResponse.ok) {
+                    Swal.fire('Compra realizada con éxito', 'Gracias por tu compra.', 'success');
+                    localStorage.removeItem('cart');
+                    displayCart();
+                } else {
+                    Swal.fire('Error', purchaseData.message || 'No se pudo completar la compra.', 'error');
+                }
+
+            } catch (error) {
+                console.error('Error al realizar la compra:', error);
+                Swal.fire('Error', 'Error en la comunicación con el servidor.', 'error');
+            }
+        }
+
+        window.onload = displayCart;
+    </script>
+</body>
+</html>

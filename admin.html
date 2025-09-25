@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #FFD700, #FFFAF0, #FFB347); /* Degradado dorado y amarillo cálido */
+            color: #4E342E; /* Marrón oscuro */
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .admin-container {
+            background: #FFFFFF; /* Blanco puro */
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            max-width: 80%;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 34px;
+            margin-bottom: 25px;
+            color: #6B4226; /* Marrón intenso */
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-size: 22px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            color: #8B5A2B; /* Marrón cálido */
+        }
+
+        button {
+            background: #FFD700; /* Dorado */
+            color: #4E342E; /* Marrón oscuro */
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #FFC125; /* Dorado más intenso */
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border: 1px solid #D2B48C; /* Borde marrón claro */
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #D2B48C; /* Bordes marrón claro */
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        th {
+            background-color: #FFD700; /* Dorado */
+            color: #4E342E;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        td {
+            background-color: #FFF8DC; /* Amarillo muy claro */
+            color: #4E342E;
+        }
+
+        td:nth-child(4) {
+            font-weight: bold;
+            color: #6B4226; /* Marrón intenso */
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+    <div class="admin-container">
+        <h1>Panel de Administración</h1>
+
+        <button onclick="confirmLogout()">Cerrar Sesión</button>
+
+        <h2>Tabla de Ventas</h2>
+        <div class="table-container">
+            <table id="salesTable">
+                <thead>
+                    <tr>
+                        <th>ID Venta</th>
+                        <th>ID Cliente</th>
+                        <th>Fecha de Venta</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>Tabla de Usuarios</h2>
+        <div class="table-container">
+            <table id="usersTable">
+                <thead>
+                    <tr>
+                        <th>ID Usuario</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Puntos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        window.onload = async () => {
+            try {
+                const salesResponse = await fetch('http://localhost:3000/sales');
+                const sales = await salesResponse.json();
+
+                const usersResponse = await fetch('http://localhost:3000/users');
+                const users = await usersResponse.json();
+
+                const salesTable = document.getElementById('salesTable').querySelector('tbody');
+                salesTable.innerHTML = '';
+                sales.forEach(sale => {
+                    const row = `<tr>
+                        <td>${sale.sale_id}</td>
+                        <td>${sale.client_id}</td>
+                        <td>${sale.sale_date}</td>
+                        <td>${sale.total}</td>
+                    </tr>`;
+                    salesTable.innerHTML += row;
+                });
+
+                const usersTable = document.getElementById('usersTable').querySelector('tbody');
+                usersTable.innerHTML = '';
+                users.forEach(user => {
+                    const row = `<tr>
+                        <td>${user.client_id}</td>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${user.phone_number}</td>
+                        <td>${user.points}</td>
+                    </tr>`;
+                    usersTable.innerHTML += row;
+                });
+
+                Swal.fire('Datos cargados exitosamente.', '', 'success');
+            } catch (error) {
+                Swal.fire('Error', 'No se pudieron cargar los datos.', 'error');
+                console.error('Error al cargar los datos:', error);
+            }
+        }
+
+        function confirmLogout() {
+            Swal.fire({
+                title: '¿Estás seguro de cerrar sesión?',
+                text: "Deberá iniciar sesión nuevamente.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, cerrar sesión',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    logout();
+                }
+            });
+        }
+
+        function logout() {
+            localStorage.clear();
+            Swal.fire('Sesión cerrada con éxito', '', 'success').then(() => {
+                window.location.href = 'index.html';
+            });
+        }
+
+    </script>
+
+</body>
+</html>
